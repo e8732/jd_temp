@@ -9,7 +9,7 @@ const $ = new Env();
 // =======================================微信server酱通知设置区域===========================================
 //此处填你申请的SCKEY.
 //(环境变量名 PUSH_KEY)
-let SCKEY = '';
+let SCKEY = 'SCU119831Teec5025f9747e12d3a7c7252acc70b745f92388cc4e75';
 
 
 // =======================================QQ酷推通知设置区域===========================================
@@ -201,6 +201,12 @@ function CoolPush(text, desp) {
         }
       }
 
+      // 已知敏感词
+      text = text.replace(/京豆/g, "豆豆");
+      desp = desp.replace(/京豆/g, "");
+      desp = desp.replace(/🐶/g, "");
+      desp = desp.replace(/红包/g, "H包");
+
       switch (QQ_MODE) {
         case "email":
           options.json = {
@@ -240,8 +246,10 @@ function CoolPush(text, desp) {
               console.log(`酷推发送${pushMode(QQ_MODE)}通知消息成功\n`)
             } else if (data.code === 400) {
               console.log(`QQ酷推(Cool Push)发送${pushMode(QQ_MODE)}推送失败：${data.msg}\n`)
+            } else if (data.code === 503) {
+              console.log(`QQ酷推出错，${data.message}：${data.data}\n`)
             }else{
-              console.log(`酷推推送异常: ${data.msg}`);
+              console.log(`酷推推送异常: ${JSON.stringify(data)}`);
             }
           }
         } catch (e) {
